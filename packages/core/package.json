@@ -1,11 +1,7 @@
 {
-    "name": "@vendure/core",
+    "name": "@Invocure/core",
     "version": "3.0.0",
     "description": "A modern, headless ecommerce framework",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/vendure-ecommerce/vendure/"
-    },
     "keywords": [
         "vendure",
         "ecommerce",
@@ -29,9 +25,6 @@
         "e2e:watch": "cross-env PACKAGE=core vitest --config ../../e2e-common/vitest.config.mts",
         "bench": "cross-env PACKAGE=core vitest --config ../../e2e-common/vitest.config.bench.ts --run",
         "ci": "npm run build"
-    },
-    "publishConfig": {
-        "access": "public"
     },
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -103,5 +96,13 @@
         "sql.js": "1.10.2",
         "sqlite3": "^5.1.7",
         "typescript": "5.3.3"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com",
+        "access": "restricted"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Invocure/vendure-fork.git"
     }
 }

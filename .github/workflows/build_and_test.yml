@@ -45,7 +45,7 @@ jobs:
     - name: Current directory
       run: pwd
     - name: Change directory to admin
-      run: cd ./packages/admin-ui/dist
+      run: cd ./packages/core
     - name: publish
       run: npm publish --access restricted
       env:
