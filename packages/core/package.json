@@ -1,5 +1,5 @@
 {
-    "name": "@Invocure/core",
+    "name": "@vendure/core",
     "version": "3.0.0",
     "description": "A modern, headless ecommerce framework",
     "keywords": [
@@ -96,13 +96,5 @@
         "sql.js": "1.10.2",
         "sqlite3": "^5.1.7",
         "typescript": "5.3.3"
-    },
-    "publishConfig": {
-        "registry": "https://npm.pkg.github.com",
-        "access": "restricted"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Invocure/vendure-fork.git"
     }
 }
