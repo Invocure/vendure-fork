@@ -1,5 +1,5 @@
 {
-  "name": "vendure",
+  "name": "@Invocure/vendure",
   "version": "0.0.0",
   "private": true,
   "engines": {
@@ -104,5 +104,13 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsdoc": "^45.0.0",
     "eslint-plugin-prefer-arrow": "^1.2.3"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Invocure/vendure-fork.git"
   }
 }

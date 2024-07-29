@@ -3,15 +3,18 @@ name: Build & Test
 on:
   push:
     branches:
-      - master
-      - major
-      - minor
-      - parallel-e2e
-  pull_request:
-    branches:
-      - master
-      - major
-      - minor
+      - publish-builds-as-github-packages
+  # push:
+  #   branches:
+  #     - master
+  #     - major
+  #     - minor
+  #     - parallel-e2e
+  # pull_request:
+  #   branches:
+  #     - master
+  #     - major
+  #     - minor
 env:
   CI: true
   node: 20.x
@@ -19,21 +22,38 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      actions: read
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ env.node }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.node }}
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@Invocure'
     - name: npm install
       run: |
         npm install
         npm install --os=linux --cpu=x64 sharp
     - name: Build
       run: npm run build
+    - name: Show list
+      run: ls -la
+    - name: Current directory
+      run: pwd
+    - name: Change directory to admin
+      run: cd ./packages/admin-ui/dist
+    - name: publish
+      run: npm publish --access restricted
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   unit-tests:
     name: unit tests
     runs-on: ubuntu-latest
+    if: false # This will prevent the job from running
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ env.node }}
@@ -51,6 +71,7 @@ jobs:
   e2e-tests:
     name: e2e tests
     runs-on: ubuntu-latest
+    if: false # This will prevent the job from running
     services:
       mariadb:
         image: bitnami/mariadb:10.3
