@@ -8,6 +8,7 @@ on:
 jobs:
   index_docs:
     runs-on: ubuntu-latest
+    if: false # This will prevent the job from running
 
     steps:
       - name: Checkout code

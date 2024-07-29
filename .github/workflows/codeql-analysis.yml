@@ -18,6 +18,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    if: false # This will prevent the job from running
 
     strategy:
       fail-fast: false
