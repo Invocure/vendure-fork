@@ -19,59 +19,6 @@ env:
   CI: true
   node: 20.x
 jobs:
-  # build:
-  #   name: build
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #     actions: read
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Use Node.js ${{ env.node }}
-  #     uses: actions/setup-node@v3
-  #     with:
-  #       node-version: ${{ env.node }}
-  #       registry-url: 'https://npm.pkg.github.com'
-  #       scope: '@Invocure'
-
-  #   - name: Install jq
-  #     run: sudo apt-get install -y jq
-
-  #   - name: npm install
-  #     run: |
-  #       npm install
-  #       npm install --os=linux --cpu=x64 sharp
-
-  #   - name: Build
-  #     run: npm run build
-
-  #   - name: Current directory
-  #     run: pwd
-
-  #   - name: Show list
-  #     run: ls -la
-
-  #   - name: Update package.json
-  #     run: |
-  #       NEW_REGISTRY="https://npm.pkg.github.com"
-  #       NEW_ACCESS="restricted"
-  #       NEW_REPO_URL="git+https://github.com/Invocure/vendure-fork.git"
-  #       REPO_TYPE="git"
-  #       NEW_NAME="@Invocure/email-plugin"
-
-  #       # Use jq to update the package.json fields
-  #       jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
-  #       jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
-  #       jq --arg name "$NEW_NAME" '.name = $name' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
-
-  #       echo "Updated package.json"
-
-  #   - name: publish
-  #     run: npm publish --access restricted
-  #     env:
-  #       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build_and_publish_email_plugin:
     name: email-plugin
     uses: ./.github/workflows/build_publish_plugin.yaml
@@ -83,16 +30,38 @@ jobs:
       packages: write
       actions: read
 
-  # build_and_publish_core_plugin:
-  #   name: core-plugin
-  #   uses: ./.github/workflows/build_publish_plugin.yaml
-  #   with:
-  #     plugin-name: 'core'
-  #     node-version: '20.x'
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #     actions: read
+  build_and_publish_core_plugin:
+    name: core-plugin
+    uses: ./.github/workflows/build_publish_plugin.yaml
+    with:
+      plugin-name: 'core'
+      node-version: '20.x'
+    permissions:
+      contents: read
+      packages: write
+      actions: read
+
+  build_and_publish_admin_ui_plugin:
+    name: admin-ui-plugin
+    uses: ./.github/workflows/build_publish_plugin.yaml
+    with:
+      plugin-name: 'admin-ui-plugin'
+      node-version: '20.x'
+    permissions:
+      contents: read
+      packages: write
+      actions: read
+
+  build_and_publish_asset_server_plugin:
+    name: asset-server-plugin
+    uses: ./.github/workflows/build_publish_plugin.yaml
+    with:
+      plugin-name: 'asset-server-plugin'
+      node-version: '20.x'
+    permissions:
+      contents: read
+      packages: write
+      actions: read
 
   unit-tests:
     name: unit tests

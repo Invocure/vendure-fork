@@ -66,16 +66,6 @@ jobs:
 
           echo "Updated package.json"
 
-      - id: debug
-        name: Debug
-        working-directory: packages/${{ inputs.plugin-name }}
-        run: |
-          pwd
-          ls -la
-          echo "-----------------------------Pacakge.json-----------------------------"
-          cat package.json
-          echo "-----------------------------Pacakge.json-----------------------------"
-
       - id: publish-plugin
         name: Publish plugin
         run: npm publish --access restricted
