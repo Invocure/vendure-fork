@@ -60,14 +60,25 @@ jobs:
           REPO_TYPE="git"
           NEW_NAME="@Invocure/${{ inputs.plugin-name }}"
 
-          jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
-          jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
-          jq --arg name "$NEW_NAME" '.name = $name' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
+          jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' package.json > package.tmp.json && mv package.tmp.json package.json
+          jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' package.json > package.tmp.json && mv package.tmp.json package.json
+          jq --arg name "$NEW_NAME" '.name = $name' package.json > package.tmp.json && mv package.tmp.json package.json
 
           echo "Updated package.json"
+
+      - id: debug
+        name: Debug
+        working-directory: packages/${{ inputs.plugin-name }}
+        run: |
+          pwd
+          ls -la
+          echo "-----------------------------Pacakge.json-----------------------------"
+          cat package.json
+          echo "-----------------------------Pacakge.json-----------------------------"
 
       - id: publish-plugin
         name: Publish plugin
         run: npm publish --access restricted
+        working-directory: packages/${{ inputs.plugin-name }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
