@@ -44,8 +44,6 @@ jobs:
       run: npm run build
     - name: Current directory
       run: pwd
-    - name: Change directory to email-plugin
-      run: cd ./packages/email-plugin
     - name: Show list
       run: ls -la
     - name: Update package.json
@@ -57,13 +55,11 @@ jobs:
         NEW_NAME="@Invocure/email-plugin"
 
         # Use jq to update the package.json fields
-        jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' package.json > package.tmp.json && mv package.tmp.json package.json
-        jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' package.json > package.tmp.json && mv package.tmp.json package.json
-        jq --arg name "$NEW_NAME" '.name = $name' package.json > package.tmp.json && mv package.tmp.json package.json
+        jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
+        jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
+        jq --arg name "$NEW_NAME" '.name = $name' ./packages/email-plugin/package.json > package.tmp.json && mv package.tmp.json ./packages/email-plugin/package.json
 
         echo "Updated package.json"
-    - name: Show list
-      run: ls -la
     - name: publish
       run: npm publish --access restricted
       env:
