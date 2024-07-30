@@ -78,6 +78,10 @@ jobs:
     with:
       plugin-name: 'email-plugin'
       node-version: '20.x'
+    permissions:
+      contents: read
+      packages: write
+      actions: read
 
   build_and_publish_core_plugin:
     name: core-plugin
@@ -85,6 +89,10 @@ jobs:
     with:
       plugin-name: 'core'
       node-version: '20.x'
+    permissions:
+      contents: read
+      packages: write
+      actions: read
 
   unit-tests:
     name: unit tests
