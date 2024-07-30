@@ -1,0 +1,73 @@
+name: build-publish-plugin
+run-name: Build & publish plugin
+on:
+  workflow_call:
+    inputs:
+      plugin-name:
+        description: 'Name of the plugin that should be built and published'
+        required: true
+        type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: true
+        type: string
+
+jobs:
+  build_publish:
+    runs-on: ubuntu-latest
+    name: Build & publish ${{ inputs.plugin-name }}
+    permissions:
+      contents: read
+      packages: write
+      actions: read
+    env:
+      sha: ${{ inputs.node-version }}
+
+    steps:
+      - id: get-source-code
+        name: Get source code
+        uses: actions/checkout@v4
+
+      - id: setup-nodejs
+        name: Setup Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@Invocure'
+
+      - id: install-jq
+        name: Install jq
+        run: sudo apt-get install -y jq
+
+      - id: install-dependencies
+        name: Install dependencies
+        run: |
+          npm install
+          npm install --os=linux --cpu=x64 sharp
+
+      - id: build
+        name: Build
+        run: npm run build
+      
+      - id: update-package-json
+        name: Update package.json
+        working-directory: packages/${{ inputs.plugin-name }}
+        run: |
+          NEW_REGISTRY="https://npm.pkg.github.com"
+          NEW_ACCESS="restricted"
+          NEW_REPO_URL="git+https://github.com/Invocure/vendure-fork.git"
+          REPO_TYPE="git"
+          NEW_NAME="@Invocure/${{ inputs.plugin-name }}"
+
+          jq --arg registry "$NEW_REGISTRY" --arg access "$NEW_ACCESS" '.publishConfig = {registry: $registry, access: $access}' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
+          jq --arg url "$NEW_REPO_URL" --arg type "$REPO_TYPE" '.repository = {type: $type, url: $url}' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
+          jq --arg name "$NEW_NAME" '.name = $name' ./packages/${{ inputs.plugin-name }}/package.json > package.tmp.json && mv package.tmp.json ./packages/${{ inputs.plugin-name }}/package.json
+
+          echo "Updated package.json"
+
+      - id: publish-plugin
+        name: Publish plugin
+        run: npm publish --access restricted
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
